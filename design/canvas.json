@@ -1,0 +1,43 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "Desktop — página completa",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    {
+      "file": "Mobile.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Mobile — página completa",
+      "expand": "fill",
+      "is_interactive": true
+    }
+  ],
+  "annotations": [
+    {
+      "id": "nota-placeholders",
+      "x": 0,
+      "y": -300,
+      "w": 440,
+      "text": "A preencher: os dois números entre colchetes — [00]+ clientes atendidas e [00] anos de experiência — e o número da rua na seção Localização ([nº] da Rua Cruzeiro do Sul).\nTodo o resto (WhatsApp, Instagram, salão, fotos) veio dos dados reais."
+    },
+    {
+      "id": "nota-fontes",
+      "x": 500,
+      "y": -300,
+      "w": 440,
+      "text": "Paleta: branco + #9900FF, substituindo o bege e o amarelo do frontend de referência. Estrutura, escalas em vw, raios e coreografia de scroll seguem o código original.\nRole dentro da prancheta para ver as animações."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

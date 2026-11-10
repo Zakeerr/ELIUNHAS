@@ -1,0 +1,82 @@
+// Cópia de referência — o mesmo conteúdo já vai inline em index.html
+// (dados estruturados JSON-LD exigem <script> embutido para funcionar
+// quando a página é aberta direto do disco, sem servidor).
+{
+  "@context": "https://schema.org",
+  "@type": "NailSalon",
+  "name": "Eliane Reis — Manicure & Nail Designer",
+  "description": "Alongamento em gel e fibra de vidro, esmaltação em gel, francesinha e nail art, com hora marcada em Mogi das Cruzes, SP.",
+  "image": "assets/hero.jpg",
+  "telephone": "+5511980326159",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Rua Cruzeiro do Sul",
+    "addressLocality": "Mogi das Cruzes",
+    "addressRegion": "SP",
+    "postalCode": "08780-370",
+    "addressCountry": "BR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -23.5220993,
+    "longitude": -46.179883
+  },
+  "location": {
+    "@type": "Place",
+    "name": "The One Salão HBS"
+  },
+  "founder": {
+    "@type": "Person",
+    "name": "Eliane Reis",
+    "jobTitle": "Manicure e Nail Designer"
+  },
+  "sameAs": [
+    "https://www.instagram.com/eliane.reis03/",
+    "https://wa.me/5511980326159"
+  ],
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Alongamento em gel"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Alongamento em fibra de vidro"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Esmaltação em gel"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Francesinha"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Nail art"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Manutenção"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1179 @@
+/* ============================================================
+   ELIANE REIS — MANICURE & NAIL DESIGNER
+   Sistema visual v2: "gel com brilho".
+   Branco + violeta #9900FF, lilás do blazer como cor de apoio,
+   Bodoni Moda (display) + Hanken Grotesk (texto) + IBM Plex Mono
+   (rótulos). O momento de assinatura é a seção Contato, com as
+   ondas de esmalte líquido (GradientWaves) atrás do convite.
+   ============================================================ */
+
+:root {
+  --paper: #ffffff;
+  --ink: #160b22;
+  --ink-2: rgba(22, 11, 34, 0.7);
+  --ink-3: rgba(22, 11, 34, 0.48);
+  --violet: #9900ff;
+  --violet-deep: #5c00a3;
+  --lilac: #c7a6f5;
+  --haze: #f7f1fe;
+  --line: rgba(153, 0, 255, 0.14);
+  --night: #12051f;
+
+  --font-display: "Bodoni Moda", "Bodoni 72", Didot, Georgia, serif;
+  --font-body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  /* --rail é a largura da navegação lateral (no celular ela vira gaveta: 0) */
+  --rail: 232px;
+  /* unidade de altura da tela usada no Início e no Contato (ver abaixo) */
+  --vh: 1vh;
+  --gutter: clamp(20px, 4vw, 64px);
+  --content-left: calc(var(--rail) + var(--gutter));
+  --radius-card: 22px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --swiper-theme-color: var(--violet);
+}
+
+@supports (height: 1svh) {
+  :root { --vh: 1svh; }
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+html.is-locked { overflow: hidden; }
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: clamp(0.94rem, 0.9rem + 0.15vw, 1.05rem);
+  line-height: 1.6;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+p { margin: 0; }
+h1, h2, h3, h4 { margin: 0; font-weight: inherit; }
+button { font: inherit; color: inherit; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+address { font-style: normal; }
+figure { margin: 0; }
+
+::selection { background-color: var(--violet); color: #fff; }
+:focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
+
+.svg-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.icon { width: 1.15em; height: 1.15em; flex: none; display: block; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 2000;
+  left: 16px;
+  top: -64px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background-color: var(--violet);
+  color: #fff;
+  font-weight: 600;
+  transition: top 0.2s ease;
+}
+.skip-link:focus { top: 16px; }
+
+.shell {
+  width: 100%;
+  padding-left: var(--content-left);
+  padding-right: var(--gutter);
+}
+
+/* ============================================================
+   TIPOGRAFIA
+   ============================================================ */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background-color: currentColor;
+}
+.eyebrow--light { color: var(--lilac); }
+
+.display {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 1.1rem + 3.4vw, 4.75rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.display em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--violet);
+}
+.display--xl { font-size: clamp(2.5rem, 1rem + 4.8vw, 6.5rem); }
+
+.lead {
+  max-width: 42ch;
+  font-size: clamp(1rem, 0.95rem + 0.22vw, 1.15rem);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.lead--light { color: rgba(255, 255, 255, 0.74); }
+
+.statement {
+  max-width: 26ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 0.95rem + 1.15vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: -0.015em;
+}
+.statement em { font-style: italic; font-weight: 400; color: var(--violet); }
+
+/* Bodoni Moda é variável e tem contornos sobrepostos: em corpo grande o
+   rasterizador deixa frestas claras nas junções das letras. Um traço
+   finíssimo da mesma cor cobre essas junções. */
+.display,
+.statement,
+.footer-mark { -webkit-text-stroke: 0.01em currentColor; }
+.footer-mark { -webkit-text-stroke-width: 0.012em; }
+
+/* Máscaras de linha do SplitText: folga para o itálico não ser cortado */
+.split-line-mask {
+  padding: 0 0.14em 0.12em 0;
+  margin: 0 -0.14em -0.12em 0;
+}
+
+/* ============================================================
+   MARCA
+   ============================================================ */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+}
+.brand-mark { width: 20px; height: 25px; color: var(--violet); flex: none; }
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.brand-name em { font-style: italic; font-weight: 400; color: var(--violet); }
+
+/* ============================================================
+   NAVEGAÇÃO LATERAL (LineSidebar)
+   ============================================================ */
+.rail {
+  position: fixed;
+  z-index: 50;
+  inset: 0 auto 0 0;
+  width: var(--rail);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 0 28px 28px;
+  pointer-events: none;
+}
+.rail > * { pointer-events: auto; }
+
+/* menu e botão juntos no pé da barra: o meio fica livre para o nome
+   gigante do Início, que começa na margem esquerda */
+.rail-nav { margin-left: -6px; margin-top: auto; margin-bottom: 20px; }
+
+.line-sidebar__link { display: block; color: inherit; outline-offset: 6px; }
+.line-sidebar__label { font-family: var(--font-body); font-weight: 500; letter-spacing: 0.005em; }
+.line-sidebar__index { font-family: var(--font-mono); }
+
+.rail-foot { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding-right: 24px; }
+.rail-meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Sobre a seção escura (Contato) cada parte da barra lateral inverte as
+   cores (a classe .is-dark vai na marca, no menu e no pé, conforme o
+   Contato passa atrás de cada um). As variáveis do menu vivem inline no
+   <nav>, por isso o !important. */
+.rail .brand,
+.rail .rail-meta,
+.rail .line-sidebar { transition: color 0.4s ease; }
+.rail .brand.is-dark { color: #fff; }
+.rail .brand.is-dark .brand-name em,
+.rail .brand.is-dark .brand-mark { color: var(--lilac); }
+.rail-foot.is-dark .rail-meta { color: rgba(255, 255, 255, 0.5); }
+.rail-nav.is-dark .line-sidebar {
+  --text-color: rgba(255, 255, 255, 0.72) !important;
+  --marker-color: rgba(255, 255, 255, 0.28) !important;
+  --accent-color: #ffffff !important;
+}
+
+/* ============================================================
+   FUNDO ANIMADO — GradientWaves fixo atrás do site inteiro
+   ============================================================ */
+.site-waves {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+}
+/* celular: quadro com metade do tamanho, ampliado 2x */
+.is-low-power .site-waves {
+  inset: 0 auto auto 0;
+  width: 50%;
+  height: 50%;
+  transform: scale(2);
+  transform-origin: 0 0;
+}
+main,
+.site-footer { position: relative; z-index: 1; }
+
+/* ============================================================
+   INÍCIO — nome de capa atrás da foto centralizada
+   Camadas: ondas (fundo) < nome < foto < frase e botões
+   ============================================================ */
+.hero {
+  position: relative;
+  height: calc(100 * var(--vh));
+  min-height: 600px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-top {
+  /* largura reservada para a cabeça da foto entre "Eliane" e "Reis"
+     (o cabelo ocupa ~52% da altura da tela) + 20px de folga de cada lado */
+  --face: calc(52 * var(--vh) + 40px);
+  position: absolute;
+  z-index: 1;
+  top: clamp(80px, calc(10 * var(--vh)), 112px);
+  left: var(--gutter);
+  right: var(--gutter);
+}
+.hero-masthead {
+  display: block;
+  font-family: var(--font-display);
+  /* "Eliane" à esquerda e "Reis" à direita, livres da cabeça da foto.
+     Metade do cabelo ocupa ~27% da altura da tela a partir do centro;
+     "Eliane" mede ~2,6× o tamanho da letra e precisa caber nesse espaço
+     com 24px de folga. Teto de 23% da altura para nunca descer até o menu. */
+  font-size: max(3.2rem, min(calc((50vw - 27 * var(--vh) - var(--gutter) - 24px) / 2.6), calc(23 * var(--vh))));
+  font-weight: 500;
+  line-height: 0.8;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+  color: var(--ink);
+  -webkit-text-stroke: 0.012em currentColor;
+}
+.hero-masthead em { font-style: italic; font-weight: 400; color: var(--violet); }
+.mast-fold { display: block; width: 100%; }
+/* Par centralizado: "Eliane" encosta à esquerda do rosto e "Reis" à
+   direita, com a largura da cabeça (--face) entre os dois. */
+.mast-fold .fold-text-visual {
+  display: grid;
+  grid-template-columns: 1fr var(--face) 1fr;
+  align-items: baseline;
+}
+.mast-fold .fold-text-visual > .fold-text-word { grid-column: 1; justify-self: end; }
+.mast-fold .fold-text-visual > em { grid-column: 3; justify-self: start; }
+/* antes do FoldText montar as letras (ou sem JS) */
+.mast-fold:not(.fold-text) {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: var(--face);
+}
+
+/* FoldText nos títulos de marca: herda a tipografia de quem o contém
+   (o CSS do componente fixa altura de linha e espaçamento próprios). */
+[data-fold].fold-text { line-height: inherit; letter-spacing: inherit; }
+
+.hero-meta {
+  /* mesmas colunas do nome: cada linha fica embaixo da sua palavra */
+  display: grid;
+  grid-template-columns: 1fr var(--face) 1fr;
+  margin-top: clamp(14px, calc(2 * var(--vh)), 24px);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.hero-meta p:first-child { grid-column: 1; justify-self: end; text-align: right; }
+.hero-meta p:last-child { grid-column: 3; justify-self: start; }
+
+/* Tamanho marcado pela cliente: o cabelo encosta no topo da tela e o
+   busto desce até a frase. Equivale à foto com ~106% da altura da tela
+   (escala ~1:1 numa tela de 884px de altura); a base passa da tela e
+   se dissolve atrás da frase. */
+.hero-figure {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: var(--vh);
+  pointer-events: none;
+  will-change: transform;
+}
+.hero-portrait {
+  flex: none;
+  /* limite de 1,3× o original para não perder nitidez em telas enormes */
+  width: min(calc(106 * var(--vh) * 1671 / 941), 2172px);
+  max-width: none;
+  height: auto;
+  /* o recorte da foto termina reto na base: dissolve no fundo */
+  -webkit-mask-image: linear-gradient(180deg, #000 62%, rgba(0, 0, 0, 0) 92%);
+  mask-image: linear-gradient(180deg, #000 62%, rgba(0, 0, 0, 0) 92%);
+}
+
+.hero-bottom {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: clamp(24px, calc(5 * var(--vh)), 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(14px, calc(2.2 * var(--vh)), 22px);
+  padding: 0 var(--gutter);
+  text-align: center;
+}
+/* véu claro só atrás dos botões, para eles não brigarem com o cabelo da foto */
+.hero-bottom::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: -30%;
+  width: min(640px, 110vw);
+  height: 220%;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.5) 55%, rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+
+/* ============================================================
+   SEÇÕES
+   ============================================================ */
+.section {
+  position: relative;
+  padding-top: clamp(80px, 9vw, 150px);
+  padding-bottom: clamp(80px, 9vw, 150px);
+  /* o brilho do SpecularButton passa 24px da borda do botão: isso não
+     pode empurrar a página para o lado */
+  overflow-x: clip;
+}
+.site-footer { overflow-x: clip; }
+
+/* ---------------- SOBRE MIM ---------------- */
+.about-head { margin-bottom: clamp(40px, 4.5vw, 80px); }
+
+/* splitLevelClassName do RotatingText: máscara do slide, com folga para o itálico */
+.rotor-split {
+  overflow: hidden;
+  padding: 0 0.08em 0.1em;
+  margin: 0 -0.08em -0.1em;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(32px, 5vw, 96px);
+  align-items: end;
+}
+.about-copy { display: flex; flex-direction: column; gap: clamp(28px, 3.2vw, 44px); }
+
+.services-label {
+  margin-bottom: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.services-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.services-list li {
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background-color: var(--haze);
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Cartão holográfico (HoloCard): frente com a foto, verso com contatos */
+.about-card { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 380px; justify-self: end; }
+.about-holo { display: block; width: 100%; color: var(--violet); }
+/* reserva sem JS: só a foto, no mesmo formato do cartão */
+.about-holo > img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius-card); }
+.about-holo .holo-card__shadow { background: rgba(70, 0, 130, 0.38); }
+.about-card-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+.about-card-name { font-family: var(--font-display); font-size: 0.98rem; font-weight: 500; }
+.about-card-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+.about-card-hint::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: hint-pulse 1.8s ease-in-out infinite;
+}
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* Etapas do atendimento — sequência real, por isso numeradas */
+.process { margin-top: clamp(80px, 9vw, 140px); }
+.process-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  margin-bottom: 28px;
+}
+.process-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 1.1rem + 1.5vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+.process-note { max-width: 34ch; color: var(--ink-3); font-size: 0.95rem; }
+
+.process-rule { position: relative; height: 1px; margin-bottom: 28px; background-color: var(--line); }
+.process-rule span {
+  position: absolute;
+  inset: 0;
+  background-color: var(--violet);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.process-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.process-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 20px 20px;
+  border-radius: var(--radius-card);
+}
+.process-step {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--violet);
+}
+.process-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1.05rem + 0.4vw, 1.4rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.process-card-text { color: var(--ink-2); font-size: 0.9rem; line-height: 1.55; }
+.process-meta {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ---------------- RESULTADOS (Swiper) ---------------- */
+.works-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 25rem);
+  gap: 24px 48px;
+  align-items: end;
+  margin-bottom: clamp(32px, 4vw, 56px);
+}
+.works-intro { color: var(--ink-2); }
+
+.works-swiper.swiper {
+  margin-left: var(--content-left);
+  margin-right: 0;
+  overflow: hidden;
+}
+.works-swiper .swiper-slide { width: clamp(230px, 21vw, 330px); height: auto; }
+
+.work-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-card);
+  background-color: var(--haze);
+  text-align: left;
+  cursor: zoom-in;
+}
+.work-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-out);
+}
+.work-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(18, 5, 31, 0.3) 0%, rgba(18, 5, 31, 0) 28%, rgba(18, 5, 31, 0) 52%, rgba(18, 5, 31, 0.8) 100%);
+}
+.work-card:hover .work-image { transform: scale(1.045); }
+
+.work-tags { position: absolute; z-index: 2; top: 14px; left: 14px; display: flex; gap: 6px; }
+.work-tags span {
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+.work-meta {
+  position: absolute;
+  z-index: 2;
+  left: 18px;
+  right: 68px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #fff;
+}
+.work-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 0.95rem + 0.7vw, 1.6rem);
+  font-weight: 500;
+  line-height: 1.05;
+}
+.work-sub { color: rgba(255, 255, 255, 0.78); font-size: 0.82rem; line-height: 1.4; }
+.work-zoom {
+  position: absolute;
+  z-index: 2;
+  right: 16px;
+  bottom: 18px;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: var(--violet);
+  color: #fff;
+  transition: transform 0.4s var(--ease-out);
+}
+.work-zoom svg { width: 18px; height: 18px; }
+.work-card:hover .work-zoom { transform: scale(1.1); }
+
+.works-controls { display: flex; align-items: center; gap: 24px; margin-top: 32px; }
+.works-counter { min-width: 76px; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.06em; }
+.works-total { color: var(--ink-3); }
+.works-progress.swiper-pagination-progressbar {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  border-radius: 2px;
+  background-color: var(--line);
+  overflow: hidden;
+}
+.works-arrows { display: flex; gap: 10px; }
+
+/* ---------------- CONTATO (assinatura: GradientWaves) ---------------- */
+.section.section--contact {
+  min-height: calc(100 * var(--vh));
+  padding-top: clamp(100px, 10vw, 170px);
+  padding-bottom: clamp(240px, 28vw, 440px);
+  background-color: var(--night);
+  color: #fff;
+  overflow: hidden;
+  isolation: isolate;
+}
+.contact-waves { position: absolute; z-index: -1; inset: 0; }
+.contact-inner { position: relative; display: flex; flex-direction: column; align-items: flex-start; }
+.contact-inner .display { max-width: 11ch; color: #fff; }
+.contact-inner .display em { color: var(--lilac); }
+.contact-inner .lead { margin-top: 28px; }
+/* RotatingText: os serviços que dá para agendar */
+.contact-services {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.12em 0.3em;
+  margin-top: 32px;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 0.95rem + 0.9vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: #fff;
+  -webkit-text-stroke: 0.01em currentColor;
+}
+.contact-services .text-rotate-highlight {
+  display: inline-flex;
+  padding: 0.02em 0.26em 0.1em;
+  border-radius: 0.16em;
+  font-style: italic;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.contact-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+
+.copy-phone {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 28px;
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.copy-phone-number { font-size: 1rem; }
+.copy-phone-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid currentColor;
+  color: var(--lilac);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.copy-phone:hover .copy-phone-action { color: #fff; }
+
+/* ---------------- LOCALIZAÇÃO ---------------- */
+.map-head { margin-bottom: clamp(32px, 4vw, 56px); }
+.map-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.6fr);
+  gap: 16px;
+  align-items: stretch;
+}
+.map-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  padding: clamp(22px, 2.2vw, 34px);
+  border-radius: var(--radius-card);
+}
+.map-place {
+  margin-bottom: 14px;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1.1rem + 0.9vw, 2rem);
+  font-weight: 500;
+  line-height: 1.05;
+}
+.map-address { color: var(--ink-2); line-height: 1.6; }
+.map-row { display: flex; gap: 10px; color: var(--ink-2); font-size: 0.95rem; line-height: 1.5; }
+.map-row .icon { margin-top: 0.2em; color: var(--violet); }
+.map-frame {
+  position: relative;
+  min-height: clamp(300px, 30vw, 460px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  /* o conteúdo do iframe do Google Maps vazava como um bloco branco abaixo
+     do quadro, por cima do rodapé: só o recorte explícito contém ele */
+  clip-path: inset(0 round var(--radius-card));
+  background-color: var(--haze);
+}
+.map-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* ---------------- RODAPÉ ---------------- */
+.site-footer { padding: clamp(40px, 6vw, 96px) 0 28px; }
+.footer-mark {
+  font-family: var(--font-display);
+  font-size: calc((100vw - var(--content-left) - var(--gutter)) * 0.19);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.footer-mark em { font-style: italic; font-weight: 400; color: var(--violet); }
+.footer-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: clamp(24px, 3vw, 40px);
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: 0.85rem;
+}
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { transition: color 0.25s ease; }
+.footer-links a:hover { color: var(--violet); }
+
+/* ============================================================
+   SPECULAR BUTTON — variações do site
+   ============================================================ */
+.specular-button { font-family: var(--font-body); font-weight: 600; text-align: center; }
+.specular-button .icon { width: 1.15em; height: 1.15em; }
+.specular-button--round { width: 52px; height: 52px; padding: 0; }
+.specular-button--round .icon { width: 20px; height: 20px; }
+.specular-button.is-flat { box-shadow: inset 0 0 0 1px var(--line); }
+.specular-button.swiper-button-disabled { opacity: 0.4; pointer-events: none; }
+.rail-cta { width: calc(100% - 4px); }
+
+/* ============================================================
+   VISUALIZADOR DE FOTO (Flip)
+   ============================================================ */
+.lightbox {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 56px);
+}
+.lightbox[hidden] { display: none; }
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(18, 5, 31, 0.93);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.lightbox-figure {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(20px, 3vw, 48px);
+  width: 100%;
+  max-width: 1280px;
+}
+/* O palco reserva o tamanho final da foto (proporção em --ar, vinda do JS):
+   assim a legenda não se mexe enquanto o Flip leva a foto até ele. */
+.lightbox-stage {
+  --ar: 0.8;
+  position: relative;
+  flex: none;
+  aspect-ratio: var(--ar);
+  width: min(62vw, 900px, calc(84svh * var(--ar)));
+}
+.lightbox-image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  border-radius: 18px;
+  object-fit: cover;
+}
+.lightbox-caption {
+  flex: 0 0 clamp(220px, 22vw, 300px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 8px;
+  color: #fff;
+}
+.lightbox-tags {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lilac);
+}
+.lightbox-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.15rem + 1.1vw, 2.3rem);
+  font-weight: 500;
+  line-height: 1.02;
+}
+.lightbox-sub { color: rgba(255, 255, 255, 0.72); }
+.lightbox-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  font-size: 0.95rem;
+}
+.lightbox-link:hover { border-bottom-color: #fff; }
+.lightbox-close {
+  position: absolute;
+  top: clamp(12px, 2vw, 28px);
+  right: clamp(12px, 2vw, 28px);
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+}
+.lightbox-close .icon { width: 20px; height: 20px; }
+.lightbox-close:focus-visible { outline-color: #fff; }
+
+/* ============================================================
+   AVISO (copiar número)
+   ============================================================ */
+.toast {
+  position: fixed;
+  z-index: 1100;
+  left: 50%;
+  bottom: 24px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background-color: var(--ink);
+  color: #fff;
+  font-size: 0.9rem;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 16px);
+}
+
+/* ============================================================
+   ESTADOS INICIAIS DAS ANIMAÇÕES
+   Sem a classe .js-anim (JS ausente) a página aparece inteira.
+   ============================================================ */
+/* Só os filhos: os contêineres têm animação de rolagem própria, que
+   registraria a opacidade 0 como ponto de partida. */
+.js-anim .hero-portrait,
+.js-anim .hero-meta > *,
+.js-anim .hero-bottom > *,
+.js-anim .mast-fold,
+.js-anim .rail,
+.js-anim .m-bar {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* A barra do celular e os controles da gaveta só existem em tela estreita */
+.m-bar,
+.rail-scrim,
+.rail-close { display: none; }
+
+/* ============================================================
+   CELULAR E TABLET
+   Mesmo desenho do computador na largura real da tela: mesmas cores,
+   fontes, cartões e efeitos, com o nome em volta do rosto. A barra
+   lateral é a mesma, só que abre como gaveta.
+   ============================================================ */
+@media (max-width: 1099px) {
+  :root {
+    --rail: 0px;
+    --m-bar: 60px;
+    /* altura da foto do Início: nela se apoia toda a composição do topo */
+    --photo: min(118vw, calc(100 * var(--vh) - var(--m-bar) - 8px));
+  }
+
+  /* ---------------- barra do topo ---------------- */
+  .m-bar {
+    position: fixed;
+    z-index: 60;
+    inset: 0 0 auto 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: calc(var(--m-bar) + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) var(--gutter) 0;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .m-bar.is-stuck {
+    background-color: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 1px 0 var(--line);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+  .m-bar-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    margin-right: -8px;
+    padding: 0 8px;
+    border: 0;
+    background: none;
+    color: var(--violet);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .m-bar-lines { display: grid; gap: 6px; width: 24px; }
+  .m-bar-lines i { display: block; height: 1px; background-color: currentColor; }
+  .m-bar-lines i:last-child { width: 62%; }
+
+  .m-bar.is-dark.is-stuck { background-color: rgba(18, 5, 31, 0.72); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12); }
+  .m-bar.is-dark .brand { color: #fff; }
+  .m-bar.is-dark .brand-name em,
+  .m-bar.is-dark .brand-mark,
+  .m-bar.is-dark .m-bar-toggle { color: var(--lilac); }
+
+  /* ---------------- barra lateral como gaveta ---------------- */
+  .rail {
+    z-index: 80;
+    width: min(300px, 84vw);
+    padding: calc(16px + env(safe-area-inset-top)) 0 calc(28px + env(safe-area-inset-bottom)) 24px;
+    background-color: var(--paper);
+    background-image: linear-gradient(180deg, var(--paper) 40%, var(--haze));
+    box-shadow: 0 0 60px rgba(70, 0, 130, 0.22);
+    visibility: hidden;
+    transform: translateX(-102%);
+    transition: transform 0.45s var(--ease-out), visibility 0s linear 0.45s;
+  }
+  .rail.is-open {
+    visibility: visible;
+    transform: none;
+    transition: transform 0.45s var(--ease-out), visibility 0s;
+  }
+  .rail .brand { align-self: flex-start; min-height: 44px; }
+  .rail-close {
+    position: absolute;
+    top: calc(16px + env(safe-area-inset-top));
+    right: 12px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: none;
+    color: var(--violet);
+    cursor: pointer;
+  }
+  .rail-close .icon { width: 22px; height: 22px; }
+  /* itens mais altos para o dedo */
+  .rail-nav .line-sidebar {
+    --item-gap: 0px !important;
+    --font-size: 1.05rem !important;
+  }
+  .rail-nav .line-sidebar__link { padding: 11px 0; }
+  .rail-scrim {
+    display: block;
+    position: fixed;
+    z-index: 70;
+    inset: 0;
+    background-color: rgba(18, 5, 31, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .rail-scrim.is-open { opacity: 1; pointer-events: auto; }
+
+  /* ---------------- início: nome em volta do rosto ---------------- */
+  .hero {
+    height: calc(var(--m-bar) + var(--photo) + 8px);
+    min-height: 0;
+  }
+  .hero-figure { padding-top: var(--m-bar); }
+  .hero-portrait {
+    width: calc(var(--photo) * 1671 / 941);
+  }
+  .hero-top {
+    /* a parte alta do cabelo mede ~34% da altura da foto: as palavras
+       encostam nele dos dois lados, como no computador */
+    --face: calc(var(--photo) * 0.36);
+    top: calc(var(--m-bar) + var(--photo) * 0.035);
+    left: 10px;
+    right: 10px;
+  }
+  .hero-masthead {
+    font-size: min(calc((50vw - 10px - var(--photo) * 0.18) / 2.6), calc(var(--photo) * 0.2));
+  }
+  /* as linhas de apoio ficam abaixo da palavra, sem encostar nos óculos */
+  .hero-meta {
+    margin-top: 12px;
+    font-size: clamp(0.5rem, 2.3vw, 0.72rem);
+    letter-spacing: min(0.1em, 0.2vw);
+    line-height: 1.45;
+  }
+  .hero-meta p:first-child { justify-self: start; text-align: left; }
+  .hero-meta p:last-child { justify-self: end; text-align: right; }
+  .hero-meta .nb { display: block; white-space: nowrap; }
+  .hero-meta .sep { display: none; }
+  .hero-bottom { bottom: 22px; }
+  .hero-actions { flex-wrap: nowrap; gap: 8px; }
+  .hero-actions .specular-button {
+    padding: 13px clamp(14px, 4.6vw, 28px);
+    font-size: clamp(0.86rem, 3.8vw, 1rem);
+    white-space: nowrap;
+  }
+
+  /* ---------------- seções ---------------- */
+  .section { padding-top: 72px; padding-bottom: 72px; }
+  .display { font-size: clamp(2.5rem, 11vw, 4.75rem); }
+  .display--xl { font-size: clamp(3rem, 13.5vw, 6.5rem); }
+  .statement { font-size: clamp(1.6rem, 7vw, 2.1rem); max-width: 22ch; }
+  .lead { max-width: 46ch; }
+
+  .about-grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+  .about-card { justify-self: center; max-width: min(380px, 100%); }
+
+  .process-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .works-head { grid-template-columns: minmax(0, 1fr); }
+  .works-swiper .swiper-slide { width: clamp(250px, 72vw, 340px); }
+  .works-controls { gap: 16px; margin-top: 24px; }
+  .works-counter { min-width: 0; white-space: nowrap; }
+
+  .section.section--contact {
+    min-height: 0;
+    padding-top: 96px;
+    padding-bottom: clamp(160px, 42vw, 320px);
+  }
+
+  .map-grid { grid-template-columns: minmax(0, 1fr); }
+  .map-frame { min-height: 320px; }
+
+  .site-footer { padding-top: 32px; }
+  .footer-bar { flex-direction: column; align-items: flex-start; }
+  .footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
+}
+
+/* Em telas maiores as linhas de apoio voltam a ficar junto do rosto, como no
+   computador, com folga para os óculos. */
+@media (min-width: 600px) and (max-width: 1099px) {
+  .hero-meta p:first-child { justify-self: end; text-align: right; padding-right: calc(var(--photo) * 0.08); }
+  .hero-meta p:last-child { justify-self: start; text-align: left; }
+}
+
+/* Celular deitado e tablet deitado: sobra largura, então o nome se afasta
+   do cabelo como no computador. */
+@media (max-width: 1099px) and (orientation: landscape) {
+  .hero-top { --face: calc(var(--photo) * 0.52); }
+  .hero-masthead {
+    font-size: min(calc((50vw - 10px - var(--photo) * 0.26) / 2.6), calc(var(--photo) * 0.2));
+  }
+  .hero-meta p:first-child { padding-right: 0; }
+}
+
+/* uma coluna só onde duas não cabem */
+@media (max-width: 599px) {
+  .process-list { grid-template-columns: minmax(0, 1fr); }
+  .contact-actions { flex-direction: column; align-items: stretch; width: 100%; }
+}
+
+/* Celulares bem estreitos: a foto diminui um pouco para o nome e as linhas
+   de apoio continuarem livres do cabelo. */
+@media (max-width: 340px) {
+  :root { --photo: min(108vw, calc(100 * var(--vh) - var(--m-bar) - 8px)); }
+}
+
+@media (max-width: 1099px) and (prefers-reduced-motion: reduce) {
+  .rail,
+  .rail.is-open,
+  .rail-scrim { transition: none; }
+}
+
+/* ============================================================
+   VISUALIZADOR DE FOTO EM TELA EM PÉ
+   O visualizador ocupa a tela inteira (não faz parte do layout da
+   página): em tela em pé, a foto vai em cima e a legenda embaixo.
+   ============================================================ */
+@media (orientation: portrait) {
+  .lightbox-figure { flex-direction: column; align-items: center; }
+  .lightbox-stage { width: min(92vw, calc(62svh * var(--ar))); }
+  .lightbox-caption { flex: none; width: 100%; max-width: 92vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-card-hint::before { animation: none; opacity: 1; }
+  .work-image,
+  .work-zoom { transition: none; }
+}
